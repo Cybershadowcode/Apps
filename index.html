@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyScript Terminal with Lessons</title>
+    <title>PyScript Coding Lessons with Images</title>
     <!-- Load PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
@@ -39,12 +39,17 @@
         .lesson-content {
             margin-top: 10px;
         }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Python Lessons with PyScript Terminal</h1>
-    <p>Select a lesson below to view its content and try it in the terminal.</p>
+    <h1>Python Lessons with PyScript Terminal and Visuals</h1>
+    <p>Select a lesson below to view its content, see an image, and try the code in the terminal.</p>
 
     <!-- Lesson list -->
     <div class="lesson-container" id="lesson-container">
@@ -56,6 +61,7 @@
     <div class="lesson-content" id="lesson-content">
         <h3>Lesson Content</h3>
         <p id="lesson-description"></p>
+        <img id="lesson-image" src="" alt="Lesson Image" />
         <py-script id="python-script"></py-script>
     </div>
 
@@ -72,17 +78,43 @@
         from js import document
 
         lessons = [
-            {"title": "Lesson 1: Hello World", "description": "Learn how to print 'Hello World!' in Python.", "code": "print('Hello, World!')"},
-            {"title": "Lesson 2: Variables", "description": "Learn how to define and use variables.", "code": "x = 5\nprint(f'Value of x is: {x}')"},
-            {"title": "Lesson 3: Data Types", "description": "Explore Python's basic data types: int, float, str.", "code": "a = 5\nb = 3.5\nc = 'Hello'\nprint(type(a), type(b), type(c))"},
-            {"title": "Lesson 4: Conditional Statements", "description": "Learn about if-else statements in Python.", "code": "x = 10\nif x > 5:\n    print('x is greater than 5')\nelse:\n    print('x is less than or equal to 5')"},
-            {"title": "Lesson 5: Loops", "description": "Learn about for and while loops.", "code": "for i in range(5):\n    print(f'Loop {i}')"},
-            {"title": "Lesson 6: Functions", "description": "Learn how to define and call functions.", "code": "def greet(name):\n    print(f'Hello, {name}!')\ngreet('Alice')"},
-            {"title": "Lesson 7: Lists", "description": "Learn how to create and manipulate lists.", "code": "my_list = [1, 2, 3, 4]\nmy_list.append(5)\nprint(my_list)"},
-            {"title": "Lesson 8: Dictionaries", "description": "Learn how to use dictionaries.", "code": "my_dict = {'name': 'Alice', 'age': 25}\nprint(my_dict['name'])"},
-            {"title": "Lesson 9: Tuples", "description": "Learn about tuples and how they differ from lists.", "code": "my_tuple = (1, 2, 3)\nprint(my_tuple)"},
-            {"title": "Lesson 10: Sets", "description": "Learn about sets and how to use them.", "code": "my_set = {1, 2, 3}\nmy_set.add(4)\nprint(my_set)"}
-            # Add more lessons as needed
+            {
+                "title": "Lesson 1: Hello World",
+                "description": "In this lesson, we introduce Python by printing 'Hello World!' This is often the first program written by new programmers. It helps you understand basic output in Python.",
+                "code": "print('Hello, World!')",
+                "image": "https://www.tutorialspoint.com/python/images/hello_world.jpg"
+            },
+            {
+                "title": "Lesson 2: Variables",
+                "description": "Learn how to declare and use variables in Python. Variables store data, such as numbers or text, that you can use later in your program.",
+                "code": "x = 5\nprint(f'Value of x is: {x}')",
+                "image": "https://i.imgur.com/3Xf6ecY.png"
+            },
+            {
+                "title": "Lesson 3: Data Types",
+                "description": "Python has several built-in data types, such as integers, floats, and strings. In this lesson, you'll learn how to work with them and check their type.",
+                "code": "a = 5\nb = 3.5\nc = 'Hello'\nprint(type(a), type(b), type(c))",
+                "image": "https://miro.medium.com/max/700/1*6TV9XoI7T_LskZZ1Ri2ybw.png"
+            },
+            {
+                "title": "Lesson 4: Conditional Statements",
+                "description": "Conditional statements allow you to make decisions in your program. This lesson covers the use of `if`, `else`, and `elif` in Python.",
+                "code": "x = 10\nif x > 5:\n    print('x is greater than 5')\nelse:\n    print('x is less than or equal to 5')",
+                "image": "https://data-flair.training/blogs/wp-content/uploads/sites/2/2020/08/Python-if-else-statement.jpg"
+            },
+            {
+                "title": "Lesson 5: Loops",
+                "description": "Loops allow you to repeat actions in your code. This lesson introduces `for` loops and `while` loops in Python.",
+                "code": "for i in range(5):\n    print(f'Loop {i}')",
+                "image": "https://blog.devgenius.io/how-loops-in-python-work-c096f8bb9c57"
+            },
+            {
+                "title": "Lesson 6: Functions",
+                "description": "Functions let you encapsulate code that you want to reuse. In this lesson, we show how to define and call a function in Python.",
+                "code": "def greet(name):\n    print(f'Hello, {name}!')\ngreet('Alice')",
+                "image": "https://miro.medium.com/max/1062/1*OSvULAjkNhYUNp9N1DxdMw.png"
+            }
+            # Additional lessons can be added similarly
         ]
 
         # Load lessons into HTML
@@ -97,6 +129,7 @@
             def display_lesson(event, lesson=lesson):
                 document.getElementById('lesson-description').innerHTML = lesson['description']
                 document.getElementById('python-script').innerHTML = lesson['code']
+                document.getElementById('lesson-image').src = lesson['image']
 
             # Attach click event
             document.getElementById(f'lesson{index}').addEventListener('click', display_lesson)
@@ -109,7 +142,10 @@
         def run_terminal_command(event):
             command = terminal_input.value
             terminal_output.innerHTML += f"<br>> {command}<br>"
-            exec(command)
+            try:
+                exec(command)
+            except Exception as e:
+                terminal_output.innerHTML += f"<br>Error: {e}<br>"
 
         # Attach terminal command handler
         document.getElementById('run-command').addEventListener('click', run_terminal_command)
