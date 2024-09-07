@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyScript Coding Lessons with Instructions</title>
+    <title>Dependency Checker and Installer</title>
     <!-- Load PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
@@ -12,172 +12,113 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        .terminal-container, .lesson-container {
-            margin-top: 20px;
+        .container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        .terminal {
-            background-color: #000;
-            color: #00ff00;
-            padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
-        }
-        input[type="text"] {
-            width: 90%;
-            margin-top: 5px;
+        h1 {
+            color: #333;
         }
         button {
-            padding: 10px;
-            margin-top: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
             cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
-        .lesson-item {
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #output {
+            margin-top: 20px;
             padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
-        .lesson-content {
-            margin-top: 10px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-        .instructions {
-            background-color: #f0f8ff;
-            padding: 15px;
-            border: 1px solid #d3d3d3;
-            margin-bottom: 20px;
-        }
-        h1, h2, h3 {
-            color: #4b4b4b;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
 
-    <h1>Python Lessons with PyScript Terminal and Visuals</h1>
+<div class="container">
+    <h1>Dependency Checker and Installer</h1>
+    <p>Click the button to check and install dependencies.</p>
+    <button id="check-button">Check & Install Dependencies</button>
+    <div id="output"></div>
+</div>
 
-    <!-- Instructions Section -->
-    <div class="instructions">
-        <h2>How to Use This Page</h2>
-        <p><strong>1. Select a Lesson:</strong> Browse through the lessons listed below. When you click on a lesson, you will see its description, an image explaining the concept, and the Python code. The code will be displayed in the box below the description.</p>
-        <p><strong>2. Running Python Code:</strong> You can execute the Python code in two ways:
-            <ul>
-                <li><strong>Click "View" next to a lesson:</strong> This will display the lesson’s code in the content area.</li>
-                <li><strong>Use the PyScript terminal:</strong> Below the lessons, you'll find a terminal. You can type any Python code there and click "Run Command" to see the output directly in the terminal window.</li>
-            </ul>
-        </p>
-        <p><strong>3. Interacting with the Terminal:</strong> To test or experiment with Python, type code in the terminal’s input box. For example, try typing <code>print("Hello, PyScript!")</code> and click the "Run Command" button. The terminal will display the output below.</p>
-        <p><strong>4. Learning by Doing:</strong> Feel free to modify the lesson’s code or write your own in the terminal to get hands-on experience.</p>
-    </div>
+<!-- PyScript section -->
+<py-script>
+import js
+import sys
+import os
 
-    <!-- Lesson list -->
-    <div class="lesson-container" id="lesson-container">
-        <h2>Lessons:</h2>
-        <div id="lessons"></div>
-    </div>
+# Function to detect proxy settings
+def detect_proxy():
+    proxy = os.environ.get('HTTP_PROXY') or os.environ.get('http_proxy') or \
+            os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy')
+    return proxy
 
-    <!-- Output area for selected lesson content -->
-    <div class="lesson-content" id="lesson-content">
-        <h3>Lesson Content</h3>
-        <p id="lesson-description">Select a lesson to display the content.</p>
-        <img id="lesson-image" src="" alt="Lesson Image" style="display: none;" />
-        <py-script id="python-script"></py-script>
-    </div>
+# Function to check and install dependencies
+def check_and_install_dependencies(dependencies):
+    output = []
+    missing_packages = []
 
-    <!-- PyScript terminal -->
-    <div class="terminal-container">
-        <h2>PyScript Terminal</h2>
-        <div class="terminal" id="terminal-output"></div>
-        <input type="text" id="terminal-input" placeholder="Type Python commands here..." />
-        <button id="run-command">Run Command</button>
-    </div>
+    for package in dependencies:
+        try:
+            __import__(package)
+            output.append(f"'{package}' is already installed.\n")
+        except ImportError:
+            missing_packages.append(package)
+    
+    if missing_packages:
+        proxy = detect_proxy()
+        for package in missing_packages:
+            install_package(package, proxy, output)
+    else:
+        output.append("All dependencies are already installed.\n")
+    
+    update_output("\n".join(output))
 
-    <!-- JavaScript to dynamically load lessons and handle terminal input -->
-    <script type="text/python">
-        from js import document
+# Function to install a package with optional proxy
+def install_package(package, proxy, output):
+    try:
+        command = [sys.executable, "-m", "pip", "install", package]
+        
+        if proxy:
+            command += ['--proxy', proxy]
+        
+        js.console.log(f"Running command: {' '.join(command)}")
+        output.append(f"Installing '{package}'...\n")
+        result = js.eval(f"pyodide.runPythonAsync('!pip install {package}')")
+        output.append(f"'{package}' installed successfully!\n")
+    except Exception as e:
+        output.append(f"Error installing '{package}': {str(e)}\n")
 
-        lessons = [
-            {
-                "title": "Lesson 1: Hello World",
-                "description": "In this lesson, we introduce Python by printing 'Hello World!' This is often the first program written by new programmers. It helps you understand basic output in Python.",
-                "code": "print('Hello, World!')",
-                "image": "https://www.tutorialspoint.com/python/images/hello_world.jpg"
-            },
-            {
-                "title": "Lesson 2: Variables",
-                "description": "Learn how to declare and use variables in Python. Variables store data, such as numbers or text, that you can use later in your program.",
-                "code": "x = 5\nprint(f'Value of x is: {x}')",
-                "image": "https://i.imgur.com/3Xf6ecY.png"
-            },
-            {
-                "title": "Lesson 3: Data Types",
-                "description": "Python has several built-in data types, such as integers, floats, and strings. In this lesson, you'll learn how to work with them and check their type.",
-                "code": "a = 5\nb = 3.5\nc = 'Hello'\nprint(type(a), type(b), type(c))",
-                "image": "https://miro.medium.com/max/700/1*6TV9XoI7T_LskZZ1Ri2ybw.png"
-            },
-            {
-                "title": "Lesson 4: Conditional Statements",
-                "description": "Conditional statements allow you to make decisions in your program. This lesson covers the use of `if`, `else`, and `elif` in Python.",
-                "code": "x = 10\nif x > 5:\n    print('x is greater than 5')\nelse:\n    print('x is less than or equal to 5')",
-                "image": "https://data-flair.training/blogs/wp-content/uploads/sites/2/2020/08/Python-if-else-statement.jpg"
-            },
-            {
-                "title": "Lesson 5: Loops",
-                "description": "Loops allow you to repeat actions in your code. This lesson introduces `for` loops and `while` loops in Python.",
-                "code": "for i in range(5):\n    print(f'Loop {i}')",
-                "image": "https://blog.devgenius.io/how-loops-in-python-work-c096f8bb9c57"
-            },
-            {
-                "title": "Lesson 6: Functions",
-                "description": "Functions let you encapsulate code that you want to reuse. In this lesson, we show how to define and call a function in Python.",
-                "code": "def greet(name):\n    print(f'Hello, {name}!')\ngreet('Alice')",
-                "image": "https://miro.medium.com/max/1062/1*OSvULAjkNhYUNp9N1DxdMw.png"
-            }
-        ]
+# Function to handle the button click
+def on_check_dependencies(event):
+    dependencies = ['scapy', 'pycryptodome']  # Corrected package names
+    check_and_install_dependencies(dependencies)
 
-        # Load lessons into HTML
-        lesson_list = document.getElementById('lessons')
-        for index, lesson in enumerate(lessons):
-            lesson_item = document.createElement('div')
-            lesson_item.className = 'lesson-item'
-            lesson_item.innerHTML = f"<strong>{lesson['title']}</strong> <button id='lesson{index}'>View</button>"
-            lesson_list.appendChild(lesson_item)
+# Function to update the output in the UI
+def update_output(text):
+    output_div = js.document.getElementById("output")
+    output_div.innerHTML = text
 
-            # Function to handle lesson button clicks
-            def display_lesson(event, lesson=lesson):
-                # Update lesson description and image
-                document.getElementById('lesson-description').innerHTML = lesson['description']
-                document.getElementById('python-script').innerHTML = lesson['code']
-                
-                # Check if image exists and show it
-                if lesson['image']:
-                    document.getElementById('lesson-image').style.display = 'block'
-                    document.getElementById('lesson-image').src = lesson['image']
-                else:
-                    document.getElementById('lesson-image').style.display = 'none'
-
-            # Attach click event
-            document.getElementById(f'lesson{index}').addEventListener('click', display_lesson)
-
-        # Terminal interaction
-        terminal_output = document.getElementById('terminal-output')
-        terminal_input = document.getElementById('terminal-input')
-
-        # Function to handle terminal commands
-        def run_terminal_command(event):
-            command = terminal_input.value
-            terminal_output.innerHTML += f"<br>> {command}<br>"
-            try:
-                exec(command)
-            except Exception as e:
-                terminal_output.innerHTML += f"<br>Error: {e}<br>"
-
-        # Attach terminal command handler
-        document.getElementById('run-command').addEventListener('click', run_terminal_command)
-    </script>
+# Attach button event listener
+check_button = js.document.getElementById("check-button")
+check_button.addEventListener("click", on_check_dependencies)
+</py-script>
 
 </body>
 </html>
