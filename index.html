@@ -3,16 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Training Courses</title>
+    <title>PyScript Terminal with Lessons</title>
     <!-- Load PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
         }
-        .lesson-container {
+        .terminal-container, .lesson-container {
             margin-top: 20px;
+        }
+        .terminal {
+            background-color: #000;
+            color: #00ff00;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        input[type="text"] {
+            width: 90%;
+            margin-top: 5px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 5px;
+            cursor: pointer;
         }
         .lesson-item {
             padding: 10px;
@@ -26,8 +43,8 @@
 </head>
 <body>
 
-    <h1>Python Training Courses - 50 Lessons</h1>
-    <p>Select a lesson below to view the content and try Python code directly in your browser.</p>
+    <h1>Python Lessons with PyScript Terminal</h1>
+    <p>Select a lesson below to view its content and try it in the terminal.</p>
 
     <!-- Lesson list -->
     <div class="lesson-container" id="lesson-container">
@@ -42,7 +59,15 @@
         <py-script id="python-script"></py-script>
     </div>
 
-    <!-- JavaScript to dynamically load lessons and Python code -->
+    <!-- PyScript terminal -->
+    <div class="terminal-container">
+        <h2>PyScript Terminal</h2>
+        <div class="terminal" id="terminal-output"></div>
+        <input type="text" id="terminal-input" placeholder="Type Python commands here..." />
+        <button id="run-command">Run Command</button>
+    </div>
+
+    <!-- JavaScript to dynamically load lessons and handle terminal input -->
     <script type="text/python">
         from js import document
 
@@ -56,48 +81,8 @@
             {"title": "Lesson 7: Lists", "description": "Learn how to create and manipulate lists.", "code": "my_list = [1, 2, 3, 4]\nmy_list.append(5)\nprint(my_list)"},
             {"title": "Lesson 8: Dictionaries", "description": "Learn how to use dictionaries.", "code": "my_dict = {'name': 'Alice', 'age': 25}\nprint(my_dict['name'])"},
             {"title": "Lesson 9: Tuples", "description": "Learn about tuples and how they differ from lists.", "code": "my_tuple = (1, 2, 3)\nprint(my_tuple)"},
-            {"title": "Lesson 10: Sets", "description": "Learn about sets and how to use them.", "code": "my_set = {1, 2, 3}\nmy_set.add(4)\nprint(my_set)"},
-            {"title": "Lesson 11: File I/O", "description": "Learn how to read from and write to files.", "code": "with open('file.txt', 'w') as f:\n    f.write('Hello World')\nwith open('file.txt', 'r') as f:\n    print(f.read())"},
-            {"title": "Lesson 12: Exception Handling", "description": "Learn how to handle exceptions.", "code": "try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero')"},
-            {"title": "Lesson 13: Classes and Objects", "description": "Learn the basics of object-oriented programming.", "code": "class Person:\n    def __init__(self, name):\n        self.name = name\np = Person('Alice')\nprint(p.name)"},
-            {"title": "Lesson 14: Inheritance", "description": "Learn about inheritance in Python.", "code": "class Animal:\n    def sound(self):\n        return 'Some sound'\nclass Dog(Animal):\n    def sound(self):\n        return 'Bark'\ndog = Dog()\nprint(dog.sound())"},
-            {"title": "Lesson 15: Modules", "description": "Learn how to import and use modules.", "code": "import math\nprint(math.sqrt(16))"},
-            {"title": "Lesson 16: Recursion", "description": "Learn about recursion with examples.", "code": "def factorial(n):\n    return 1 if n == 0 else n * factorial(n - 1)\nprint(factorial(5))"},
-            {"title": "Lesson 17: Lambda Functions", "description": "Learn about anonymous lambda functions.", "code": "double = lambda x: x * 2\nprint(double(5))"},
-            {"title": "Lesson 18: Map, Filter, and Reduce", "description": "Learn how to use map, filter, and reduce.", "code": "numbers = [1, 2, 3, 4, 5]\ndoubled = list(map(lambda x: x * 2, numbers))\nprint(doubled)"},
-            {"title": "Lesson 19: List Comprehensions", "description": "Learn how to use list comprehensions.", "code": "[x for x in range(10) if x % 2 == 0]"},
-            {"title": "Lesson 20: Generators", "description": "Learn about generators and the yield keyword.", "code": "def gen_numbers():\n    for i in range(3):\n        yield i\ng = gen_numbers()\nprint(next(g))"},
-            {"title": "Lesson 21: Decorators", "description": "Learn how to use decorators.", "code": "def my_decorator(func):\n    def wrapper():\n        print('Something before the function.')\n        func()\n        print('Something after the function.')\n    return wrapper\n\n@my_decorator\ndef say_hello():\n    print('Hello!')\nsay_hello()"},
-            {"title": "Lesson 22: Context Managers", "description": "Learn how to use the 'with' statement and context managers.", "code": "with open('file.txt', 'w') as f:\n    f.write('Hello, World!')"},
-            {"title": "Lesson 23: Regular Expressions", "description": "Learn how to use regular expressions in Python.", "code": "import re\ntext = 'The rain in Spain'\nx = re.search('ai', text)\nprint(x)"},
-            {"title": "Lesson 24: JSON Handling", "description": "Learn how to parse and generate JSON.", "code": "import json\nperson = {'name': 'John', 'age': 30, 'city': 'New York'}\njson_str = json.dumps(person)\nprint(json_str)"},
-            {"title": "Lesson 25: Random Module", "description": "Learn how to generate random numbers and choices.", "code": "import random\nprint(random.randint(1, 10))"},
-            {"title": "Lesson 26: Date and Time", "description": "Learn how to work with dates and times in Python.", "code": "from datetime import datetime\nnow = datetime.now()\nprint(now)"},
-            {"title": "Lesson 27: Zip and Unzip", "description": "Learn how to zip and unzip sequences.", "code": "list1 = [1, 2, 3]\nlist2 = ['a', 'b', 'c']\nzipped = zip(list1, list2)\nprint(list(zipped))"},
-            {"title": "Lesson 28: Enumerate", "description": "Learn how to use enumerate for loops.", "code": "list1 = ['a', 'b', 'c']\nfor index, value in enumerate(list1):\n    print(f'Index {index}: {value}')"},
-            {"title": "Lesson 29: Argument Parsing", "description": "Learn how to handle command-line arguments.", "code": "import sys\nprint(f'Arguments passed: {sys.argv}')"},
-            {"title": "Lesson 30: Python Unit Testing", "description": "Learn how to write unit tests.", "code": "import unittest\nclass TestStringMethods(unittest.TestCase):\n    def test_upper(self):\n        self.assertEqual('foo'.upper(), 'FOO')\nif __name__ == '__main__':\n    unittest.main()"},
-            {"title": "Lesson 31: Logging", "description": "Learn how to use the logging module.", "code": "import logging\nlogging.basicConfig(level=logging.INFO)\nlogging.info('This is an info message')"},
-            {"title": "Lesson 32: Command-line Tools", "description": "Learn to build a basic command-line tool.", "code": "import argparse\nparser = argparse.ArgumentParser()\nparser.add_argument('name')\nargs = parser.parse_args()\nprint(f'Hello, {args.name}!')"},
-            {"title": "Lesson 33: Web Scraping with BeautifulSoup", "description": "Learn how to scrape websites using BeautifulSoup.", "code": "from bs4 import BeautifulSoup\nhtml = '<html><body><p>Hello World</p></body></html>'\nsoup = BeautifulSoup(html, 'html.parser')\nprint(soup.p.text)"},
-            {"title": "Lesson 34: HTTP Requests", "description": "Learn how to make HTTP requests with the requests module.", "code": "import requests\nresponse = requests.get('https://www.example.com')\nprint(response.status_code)"},
-            {"title": "Lesson 35: SQLite Database", "description": "Learn how to use SQLite with Python.", "code": "import sqlite3\nconn = sqlite3.connect(':memory:')\ncursor = conn.cursor()\ncursor.execute('CREATE TABLE test (id INTEGER, name TEXT)')"},
-            {"title": "Lesson 36: Multithreading", "description": "Learn how to use threads in Python.", "code": "import threading\ndef print_numbers():\n    for i in range(5):\n        print(i)\nthread = threading.Thread(target=print_numbers)\nthread.start()"},
-            {"title": "Lesson 37: Multiprocessing", "description": "Learn how to use multiprocessing in Python.", "code": "from multiprocessing import Process\ndef print_numbers():\n    for i in range(5):\n        print(i)\nprocess = Process(target=print_numbers)\nprocess.start()"},
-            {"title": "Lesson 38: AsyncIO", "description": "Learn how to use async and await for asynchronous programming.", "code": "import asyncio\nasync def main():\n    print('Hello')\n    await asyncio.sleep(1)\n    print('World')\nasyncio.run(main())"},
-            {"title": "Lesson 39: WebSockets", "description": "Learn how to handle WebSockets in Python.", "code": "import websockets\nasync def hello():\n    async with websockets.connect('ws://example.com') as websocket:\n        await websocket.send('Hello!')\nasyncio.run(hello())"},
-            {"title": "Lesson 40: Sending Emails", "description": "Learn how to send emails with Python.", "code": "import smtplib\nserver = smtplib.SMTP('smtp.example.com')\nserver.sendmail('from@example.com', 'to@example.com', 'Hello!')"},
-            {"title": "Lesson 41: CSV File Handling", "description": "Learn how to read from and write to CSV files.", "code": "import csv\nwith open('file.csv', 'w') as f:\n    writer = csv.writer(f)\n    writer.writerow(['Name', 'Age'])"},
-            {"title": "Lesson 42: XML Parsing", "description": "Learn how to parse XML files.", "code": "import xml.etree.ElementTree as ET\ntree = ET.parse('file.xml')\nroot = tree.getroot()\nprint(root.tag)"},
-            {"title": "Lesson 43: PDF Handling", "description": "Learn how to handle PDF files with PyPDF2.", "code": "import PyPDF2\nwith open('file.pdf', 'rb') as f:\n    reader = PyPDF2.PdfFileReader(f)\n    print(reader.numPages)"},
-            {"title": "Lesson 44: OpenPyXL", "description": "Learn how to handle Excel files with OpenPyXL.", "code": "import openpyxl\nwb = openpyxl.load_workbook('file.xlsx')\nprint(wb.sheetnames)"},
-            {"title": "Lesson 45: Matplotlib", "description": "Learn how to plot graphs with Matplotlib.", "code": "import matplotlib.pyplot as plt\nplt.plot([1, 2, 3], [4, 5, 6])\nplt.show()"},
-            {"title": "Lesson 46: NumPy Basics", "description": "Learn the basics of NumPy for numerical computations.", "code": "import numpy as np\na = np.array([1, 2, 3])\nprint(a)"},
-            {"title": "Lesson 47: Pandas", "description": "Learn how to use Pandas for data manipulation.", "code": "import pandas as pd\ndf = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})\nprint(df)"},
-            {"title": "Lesson 48: TensorFlow Basics", "description": "Learn the basics of TensorFlow for machine learning.", "code": "import tensorflow as tf\na = tf.constant(1)\nprint(a)"},
-            {"title": "Lesson 49: OpenCV", "description": "Learn how to use OpenCV for image processing.", "code": "import cv2\nimg = cv2.imread('image.jpg')\ncv2.imshow('Image', img)\ncv2.waitKey(0)"},
-            {"title": "Lesson 50: Flask Web Development", "description": "Learn how to build web applications with Flask.", "code": "from flask import Flask\napp = Flask(__name__)\n@app.route('/')\ndef home():\n    return 'Hello, Flask!'\nif __name__ == '__main__':\n    app.run()"}
-
+            {"title": "Lesson 10: Sets", "description": "Learn about sets and how to use them.", "code": "my_set = {1, 2, 3}\nmy_set.add(4)\nprint(my_set)"}
+            # Add more lessons as needed
         ]
 
         # Load lessons into HTML
@@ -115,6 +100,19 @@
 
             # Attach click event
             document.getElementById(f'lesson{index}').addEventListener('click', display_lesson)
+
+        # Terminal interaction
+        terminal_output = document.getElementById('terminal-output')
+        terminal_input = document.getElementById('terminal-input')
+
+        # Function to handle terminal commands
+        def run_terminal_command(event):
+            command = terminal_input.value
+            terminal_output.innerHTML += f"<br>> {command}<br>"
+            exec(command)
+
+        # Attach terminal command handler
+        document.getElementById('run-command').addEventListener('click', run_terminal_command)
     </script>
 
 </body>
