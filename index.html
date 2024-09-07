@@ -82,8 +82,8 @@
     <!-- Output area for selected lesson content -->
     <div class="lesson-content" id="lesson-content">
         <h3>Lesson Content</h3>
-        <p id="lesson-description"></p>
-        <img id="lesson-image" src="" alt="Lesson Image" />
+        <p id="lesson-description">Select a lesson to display the content.</p>
+        <img id="lesson-image" src="" alt="Lesson Image" style="display: none;" />
         <py-script id="python-script"></py-script>
     </div>
 
@@ -148,9 +148,16 @@
 
             # Function to handle lesson button clicks
             def display_lesson(event, lesson=lesson):
+                # Update lesson description and image
                 document.getElementById('lesson-description').innerHTML = lesson['description']
                 document.getElementById('python-script').innerHTML = lesson['code']
-                document.getElementById('lesson-image').src = lesson['image']
+                
+                # Check if image exists and show it
+                if lesson['image']:
+                    document.getElementById('lesson-image').style.display = 'block'
+                    document.getElementById('lesson-image').src = lesson['image']
+                else:
+                    document.getElementById('lesson-image').style.display = 'none'
 
             # Attach click event
             document.getElementById(f'lesson{index}').addEventListener('click', display_lesson)
